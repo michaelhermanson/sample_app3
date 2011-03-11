@@ -16,8 +16,8 @@ def create
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
-      @user.password.clear #= nil
-      @user.password_confirmation.clear  #= nil 
+      @user.password = nil #.clear
+      @user.password_confirmation = nil    #.clear   nil 
       @title = "Sign up"
       render 'new'
     end
