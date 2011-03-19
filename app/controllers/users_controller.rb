@@ -13,11 +13,12 @@ def create
     @user = User.new(params[:user])
     if @user.save
       # Handle a successful save.
+      sign_in @user
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
-      @user.password = nil #.clear
-      @user.password_confirmation = nil    #.clear   nil 
+    #  @user.password = nil #.clear
+    #  @user.password_confirmation = nil    #.clear   nil 
       @title = "Sign up"
       render 'new'
     end
