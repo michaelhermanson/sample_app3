@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  #testing for git
   def new
       @title = "Sign in"
   end
