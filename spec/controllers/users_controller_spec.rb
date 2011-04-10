@@ -389,9 +389,11 @@ describe "for signed-in users" do
       end
 
       it "should destroy the user" do
-        lambda do
-          delete :destroy, :id => @user
-        end.should change(User, :count).by(-1)
+        if [:delete_self_token] == nil
+          lambda do
+            delete :destroy, :id => @user
+          end.should change(User, :count).by(-1)
+        end  
       end
 
       it "should redirect to the users page" do
