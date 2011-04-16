@@ -85,6 +85,29 @@ describe "GET 'show'" do
       response.should have_selector("h1>img", :class => "gravatar")
     end
 
+   it "should show the user's microposts" do
+      mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
+      mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
+      get :show, :id => @user
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
+    end
+
+it "should show the user's microposts" do
+      mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
+      mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
+      get :show, :id => @user
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
+    end
+it "should show the user's microposts" do
+      mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
+      mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
+      get :show, :id => @user
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
+    end
+
   end
 
   describe "GET 'new'" do
@@ -365,11 +388,53 @@ describe "for signed-in users" do
       end
     end
 
-    describe "as a non-admin user" do
+#    describe "as a non-admin user" do
+#      it "should not show Delete links on this Page" do
+ #      test_sign_in(@user)
+      #   visit root_path
+#        click_link "delete"
+#        delete :destroy, :id => @user
+#        response.should redirect_to(root_path)
+#      end
+#    end
+
+ describe "as a non-admin user" do
       it "should protect the page" do
         test_sign_in(@user)
         delete :destroy, :id => @user
         response.should redirect_to(root_path)
+      end
+    end
+
+
+ describe "as a non-admin user" do
+   it "should not show Delete links on this Page" do
+  #  delete_links_show = "false"
+  #    before(:each) do
+  #   @user = Factory(:user)
+    #   delete_links_show = "false"
+  #     if document.links.title = "delete" 
+  #        delete_links_show = "true"
+  #     end   
+  #     end
+   test_sign_in(@user)
+   #  visit users_path
+  #    click_link "delete"
+      delete :destroy, :id => @user
+ #  click_link "delete"
+   response.should redirect_to(root_path)
+#   before(:each) do
+  #    @user = Factory(:user)
+   # end
+ #     if delete_links_show
+ #      test_sign_in(@user)
+ #     if link_to "delete", @user, :title == "Delete #{@user.name}"
+ #       delete :destroy, :id => @user
+ #       response.should redirect_to(root_path)
+  #      get :delete
+  #        response.should have_selector("title", :content => "delete") 
+   #     response.should have_selector(:title == "Delete #{@user.name}")
+  #      end
       end
     end
 

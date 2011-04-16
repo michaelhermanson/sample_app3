@@ -62,7 +62,7 @@ describe "when signed in" do
       fill_in :password, :with => @user.password
       click_button
     end
-it "should have a signout link" do
+it "micropost associations" do
       visit root_path
       response.should have_selector("a", :href => signout_path,
                                          :content => "Sign out")
@@ -74,4 +74,5 @@ it "should have a profile link" do
                                          :content => "Profile")
     end
   end
+
 end

@@ -13,7 +13,8 @@ def index
 
 def show
     @user = User.find(params[:id])
-     @title = @user.name
+    @microposts = @user.microposts.paginate(:page => params[:page])
+    @title = @user.name
   end
 
 def new
@@ -95,8 +96,9 @@ end
      @user =  User.find(params[:id])
        session[:cur_user_name] = current_user.name
        if @user.name == current_user.name
-      flash[:notice] = "Admins can not delete their Accounts."
-      redirect_to users_path 
+         session[:delete_self_token] = "no"
+         flash[:notice] = "Admins can not delete their Accounts."
+        redirect_to users_path 
        end
     end 
  end
