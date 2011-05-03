@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do
   before(:each) do
     @attr = { :name => "Example User",
-             :email => "user@example.com",
+             :email => "user1@example.com",
              :password => "foobar",
              :password_confirmation => "foobar" }
   end
@@ -58,6 +58,22 @@ it "should reject duplicate email addresses" do
     user_with_duplicate_email = User.new(@attr)
     user_with_duplicate_email.should_not be_valid
   end
+
+describe "passwords" do
+
+    before(:each) do
+      @user = User.new(@attr)
+    end
+
+    it "should have a password attribute" do
+      @user.should respond_to(:password)
+    end
+
+    it "should have a password confirmation attribute" do
+      @user.should respond_to(:password_confirmation)
+    end
+  end
+
 describe "password validations" do
 
     it "should require a password" do
@@ -91,11 +107,22 @@ describe "password encryption" do
        it "should have an encrypted password attribute" do
            @user.should respond_to(:encrypted_password)
        end
-     it "should set the encrypted password" do
+     it "should set the encrypted password attribute" do
       @user.encrypted_password.should_not be_blank
     end
-  describe "has_password? method" do
+   #
+    it "should have a salt" do
+      @user.should respond_to(:salt)
+    end
+  #
 
+  describe "has_password? method" do
+   
+    #
+      it "should exist" do
+        @user.should respond_to(:has_password?)
+      end
+    #
       it "should be true if the passwords match" do
         @user.has_password?(@attr[:password]).should be_true
       end    
@@ -106,6 +133,11 @@ describe "password encryption" do
     end
    describe "authenticate method" do
 
+     #
+      it "should exist" do
+        User.should respond_to(:authenticate)
+      end
+    #
       it "should return nil on email/password mismatch" do
         wrong_password_user = User.authenticate(@attr[:email], "wrongpass")
         wrong_password_user.should be_nil
@@ -161,7 +193,10 @@ describe "micropost associations" do
    it "should destroy associated microposts" do
       @user.destroy
       [@mp1, @mp2].each do |micropost|
-        Micropost.find_by_id(micropost.id).should be_nil
+       lambda do
+        Micropost.find(micropost)
+        end.should raise_error(ActiveRecord::RecordNotFound)
+ #       Micropost.find_by_id(micropost.id).should be_nil
       end
  end     
  describe "status feed" do
@@ -180,6 +215,63 @@ describe "micropost associations" do
                       :user => Factory(:user, :email => Factory.next(:email)))
         @user.feed.include?(mp3).should be_false
       end
+
+    it "should include the microposts of followed users" do
+        followed = Factory(:user, :email => Factory.next(:email))
+        mp3 = Factory(:micropost, :user => followed)
+        @user.follow!(followed)
+        @user.feed.should include(mp3)
+      end
     end
+   end
+describe "relationships" do
+
+    before(:each) do
+      @user = User.create!(@attr)
+      @followed = Factory(:user)
+    end
+
+    it "should have a relationships method" do
+      @user.should respond_to(:relationships)
+    end
+
+    it "should have a following method" do
+      @user.should respond_to(:following)
+    end
+   it "should have a follow! method" do
+      @user.should respond_to(:follow!)
+    end
+
+    it "should follow another user" do
+      @user.follow!(@followed)
+      @user.should be_following(@followed)
+    end
+
+    it "should include the followed user in the following array" do
+      @user.follow!(@followed)
+      @user.following.should include(@followed)
+    end
+   it "should have an unfollow! method" do
+      @followed.should respond_to(:unfollow!)
+    end
+
+    it "should unfollow a user" do
+      @user.follow!(@followed)
+      @user.unfollow!(@followed)
+      @user.should_not be_following(@followed)
+    end
+    it "should have a reverse_relationships method" do
+      @user.should respond_to(:reverse_relationships)
+    end
+
+    it "should have a followers method" do
+      @user.should respond_to(:followers)
+    end
+
+    it "should include the follower in the followers array" do
+      @user.follow!(@followed)
+      @followed.followers.should include(@user)
+    end
+  end
 end
-end
+
