@@ -273,5 +273,9 @@ describe "relationships" do
       @followed.followers.should include(@user)
     end
   end
+
 end
+# end
+##
+##end
 
