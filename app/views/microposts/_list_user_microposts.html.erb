@@ -1,0 +1,11 @@
+<table class=""> 
+   <tr>
+     <td class="main">
+       <h2 class="micropost">What's up?</h2>
+       <%= render 'pages/feed' %>
+     </td>
+     <td class="sidebar round">
+     <%= render :partial => 'pages/user_info', :locals => { :user_input => current_user } %>
+       <%= render 'pages/stats' %>
+     </td>
+   </tr>
